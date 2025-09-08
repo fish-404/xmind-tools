@@ -1,9 +1,10 @@
 import os
+# 在导入部分添加messagebox
 import re
 import zipfile
 import json  
 import tkinter as tk  
-from tkinter import filedialog
+from tkinter import filedialog, messagebox  # 添加messagebox
 
 class XMindNoteExtractor:
     def __init__(self):
@@ -118,11 +119,15 @@ class XMindNoteExtractor:
                     md_file.write("---\n\n")
             
             print(f"Notes已成功保存到: {output_path}")
+            # 添加保存成功提示框
+            messagebox.showinfo("保存成功", f"Notes已成功保存到:\n{output_path}")
             return True
         except Exception as e:
             print(f"保存Markdown文件时出错：{str(e)}")
+            # 添加保存失败提示框
+            messagebox.showerror("保存失败", f"保存Markdown文件时出错：\n{str(e)}")
             return False
-    
+
     def run(self):
         """运行整个提取流程"""
         # 让用户选择文件
@@ -139,8 +144,12 @@ class XMindNoteExtractor:
         # 保存为Markdown
         if notes_data:
             self.save_to_markdown(xmind_file, notes_data)
+        else:
+            # 如果没有提取到notes，显示提示
+            messagebox.showinfo("处理完成", "未在XMind文件中找到任何notes")
         
         print("处理完成！")
+        messagebox.showinfo("处理完成", "XMind笔记提取任务已完成！")
 
 if __name__ == "__main__":
     extractor = XMindNoteExtractor()
