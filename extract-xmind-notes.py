@@ -1,13 +1,14 @@
-import json
 import os
 import re
 import zipfile
-from tkinter import Tk, filedialog
+import json  
+import tkinter as tk  
+from tkinter import filedialog
 
 class XMindNoteExtractor:
     def __init__(self):
         # 创建Tkinter根窗口但隐藏它
-        self.root = Tk()
+        self.root = tk.Tk()  # 修改为使用tk.Tk()
         self.root.withdraw()
         
     def select_file(self):
@@ -73,7 +74,8 @@ class XMindNoteExtractor:
                     
                     # 如果没有plain格式，则尝试从realHTML中提取
                     elif 'realHTML' in data['notes'] and 'content' in data['notes']['realHTML']:
-                        notes_content = self._extract_text_from_html(data['notes']['realHTML']['content'])
+                        # 直接保留HTML格式，不再移除标签
+                        notes_content = data['notes']['realHTML']['content']
                     
                     if notes_content:
                         result.append({"title": full_title, "notes": notes_content})
@@ -88,19 +90,10 @@ class XMindNoteExtractor:
             for item in data:
                 self._parse_topics(item, result, parent_title)
     
+    # 可以移除或修改_extract_text_from_html函数
     def _extract_text_from_html(self, html_content):
-        """从HTML内容中提取纯文本，保留基本格式"""
-        # 移除HTML标签，但保留链接
-        # 首先提取链接
-        links = re.findall(r'<a\s+href="([^"]+)"[^>]*>(.*?)<\/a>', html_content)
-        
-        # 移除所有HTML标签
-        clean_text = re.sub(r'<[^>]+>', '', html_content)
-        
-        # 替换换行符
-        clean_text = clean_text.replace('<br>', '\n').replace('<br/>', '\n').replace('<br />', '\n')
-        
-        return clean_text
+        """保留HTML格式"""
+        return html_content  # 直接返回HTML内容，不再处理
     
     def save_to_markdown(self, xmind_file_path, notes_data):
         """将提取的notes保存为Markdown文件"""
@@ -153,4 +146,4 @@ class XMindNoteExtractor:
 
 if __name__ == "__main__":
     extractor = XMindNoteExtractor()
-    extractor.run()
+    extractor.run()  # 添加这一行来执行程序
