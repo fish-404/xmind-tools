@@ -73,7 +73,7 @@ class XMindNoteExtractor:
                         notes_content = data['notes']['plain']['content']
                     
                     # 如果没有plain格式，则尝试从realHTML中提取
-                    elif 'realHTML' in data['notes'] and 'content' in data['notes']['realHTML']:
+                    if 'realHTML' in data['notes'] and 'content' in data['notes']['realHTML']:
                         # 直接保留HTML格式，不再移除标签
                         notes_content = data['notes']['realHTML']['content']
                     
@@ -114,9 +114,7 @@ class XMindNoteExtractor:
                 
                 # 写入每个note
                 for i, note_item in enumerate(notes_data, 1):
-                    md_file.write(f"## {i}. {note_item['title']}\n\n")
-                    # 保留notes的原始格式
-                    md_file.write(note_item['notes'] + "\n\n")
+                    md_file.write(f"{i}. {note_item['title']}{note_item['notes']}\n\n")
                     md_file.write("---\n\n")
             
             print(f"Notes已成功保存到: {output_path}")
